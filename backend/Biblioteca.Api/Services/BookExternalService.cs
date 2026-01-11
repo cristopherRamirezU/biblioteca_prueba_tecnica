@@ -5,9 +5,9 @@ namespace Biblioteca.Api.Services
 {
     public class BookExternalService
     {
-        private readonly OpenLibraryClient _client;
+        private readonly IOpenLibraryClient _client;
 
-        public BookExternalService(OpenLibraryClient client)
+        public BookExternalService(IOpenLibraryClient client)
         {
             _client = client;
         }

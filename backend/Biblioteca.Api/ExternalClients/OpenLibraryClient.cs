@@ -2,7 +2,7 @@ using System.Net.Http.Json;
 
 namespace Biblioteca.Api.ExternalClients
 {
-    public class OpenLibraryClient
+    public class OpenLibraryClient : IOpenLibraryClient
     {
         private readonly HttpClient _httpClient;
 

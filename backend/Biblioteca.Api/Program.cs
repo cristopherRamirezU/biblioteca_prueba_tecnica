@@ -20,16 +20,16 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 // Registrar HttpClient para llamadas a APIs externas
 builder.Services.AddHttpClient();
 
-// Registrar cliente de OpenLibrary
-builder.Services.AddScoped<OpenLibraryClient>();
+// Registrar cliente de OpenLibrary usando interfaz
+builder.Services.AddScoped<IOpenLibraryClient, OpenLibraryClient>();
 
 // Registrar servicio de búsqueda de libros
 builder.Services.AddScoped<BookExternalService>();
 
-// Registrar repositorio de favoritos
-builder.Services.AddScoped<FavoriteRepository>();
+// Registrar repositorio de favoritos usando interfaz
+builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
-// ✅ Registrar servicio de favoritos (ESTA ES LA LÍNEA QUE FALTABA)
+// Registrar servicio de favoritos
 builder.Services.AddScoped<FavoritesService>();
 
 // Swagger / OpenAPI para documentar la API

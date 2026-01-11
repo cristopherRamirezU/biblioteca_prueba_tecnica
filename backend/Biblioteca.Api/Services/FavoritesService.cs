@@ -6,12 +6,12 @@ namespace Biblioteca.Api.Services
 {
     public class FavoritesService
     {
-        private readonly FavoriteRepository _repository;
+        private readonly IFavoriteRepository _repository;
 
         // Para simplificar, usamos siempre el mismo usuario
         private const int DefaultUserId = 1;
 
-        public FavoritesService(FavoriteRepository repository)
+        public FavoritesService(IFavoriteRepository repository)
         {
             _repository = repository;
         }

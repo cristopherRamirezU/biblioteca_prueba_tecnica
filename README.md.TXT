@@ -2,6 +2,7 @@ Prueba Técnica - Biblioteca (VISTA TI)
 
 Proyecto de prueba técnica para el cargo de Desarrollador Junior en VISTA TI.
 
+-----------------------------------------------------------------------------------
 DESCRIPCIÓN
 
 Aplicación web que permite:
@@ -12,7 +13,11 @@ Guardar libros como favoritos en una base de datos SQL Server.
 
 Listar y eliminar favoritos.
 
-Actualmente el proyecto incluye solamente el backend funcional.
+Actualmente el proyecto incluye el backend completo y tests unitarios.
+
+
+
+-----------------------------------------------------------------------------------
 
 ESTRUCTURA DEL PROYECTO
 
@@ -20,9 +25,13 @@ ESTRUCTURA DEL PROYECTO
 /frontend Frontend en Angular (pendiente)
 /database Scripts SQL para crear la base de datos
 
+
+-----------------------------------------------------------------------------------
+
 BASE DE DATOS
 
 En la carpeta /database se incluye el script:
+
 
 create_db.sql
 
@@ -36,6 +45,8 @@ Agrega una restricción única para evitar duplicados
 
 Inserta un usuario inicial de prueba
 
+
+
 Cómo ejecutar el script:
 
 Abrir SQL Server Management Studio
@@ -45,6 +56,8 @@ Abrir el archivo create_db.sql
 Ejecutarlo con el botón Execute
 
 BACKEND (.NET)
+
+
 
 Requisitos:
 
@@ -104,6 +117,10 @@ Eliminar favorito:
 
 DELETE /api/favorites/{id}
 
+
+
+-----------------------------------------------------------------------------------
+
 ARQUITECTURA DEL BACKEND
 
 El backend utiliza una arquitectura en capas:
@@ -122,15 +139,62 @@ Models
 
 Data (DbContext)
 
+Además, se utilizan interfaces para permitir pruebas unitarias con mocks:
+
+IFavoriteRepository
+
+IOpenLibraryClient
+
+
+
+
+-----------------------------------------------------------------------------------
+
+TESTS UNITARIOS
+
+Existe un proyecto de tests:
+
+/backend/Biblioteca.Api.Tests
+
+Incluye pruebas para:
+
+No permitir duplicados en favoritos
+
+No permitir requests inválidos
+
+Agregar favorito correctamente
+
+No permitir eliminar un favorito inexistente
+
+Verificar el mapeo de la API externa a DTO
+
+Cómo ejecutar los tests:
+
+Desde la carpeta:
+
+/backend/Biblioteca.Api.Tests
+
+Ejecutar:
+
+dotnet test
+
+Resultado esperado:
+
+Todos los tests deben pasar correctamente.
+
+
+
+-----------------------------------------------------------------------------------
+
 ESTADO DEL PROYECTO
 
 Backend completo y funcional
 
 Base de datos lista con script SQL
 
-Frontend pendiente
+Tests unitarios implementados y pasando
 
-Tests unitarios pendientes
+Frontend pendiente
 
 DECISIONES TÉCNICAS
 
@@ -139,5 +203,7 @@ Se utiliza SQL Server como base de datos relacional.
 Se utiliza Entity Framework Core para acceso a datos.
 
 El backend consume directamente la API externa OpenLibrary.
+
+Se utiliza arquitectura por capas y principios de inyección de dependencias.
 
 Para simplificar, se utiliza un usuario fijo con Id = 1.

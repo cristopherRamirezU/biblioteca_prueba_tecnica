@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Biblioteca.Api.Repositories
 {
-    public class FavoriteRepository
+    public class FavoriteRepository : IFavoriteRepository
     {
         private readonly AppDbContext _context;
 
