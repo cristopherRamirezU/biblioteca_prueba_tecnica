@@ -1,41 +1,55 @@
+using Biblioteca.Api.Data;
+using Biblioteca.Api.ExternalClients;
+using Biblioteca.Api.Services;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
+// =============================================
+// Agregar servicios al contenedor
+// =============================================
+
+// Agregar soporte para controllers
+builder.Services.AddControllers();
+
+// Registrar DbContext para SQL Server
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Registrar HttpClient para llamadas a APIs externas
+builder.Services.AddHttpClient();
+
+// Registrar cliente de OpenLibrary
+builder.Services.AddScoped<OpenLibraryClient>();
+
+// Registrar servicio de libros externos
+builder.Services.AddScoped<BookExternalService>();
+
+// Swagger / OpenAPI para documentar la API
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// =============================================
+// Configurar el pipeline de solicitudes HTTP
+// =============================================
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    // Habilitar Swagger en entorno de desarrollo
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
+// Redireccionar automáticamente a HTTPS
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// Habilitar autorización (aunque todavía no usemos autenticación)
+app.UseAuthorization();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+// Mapear los controllers
+app.MapControllers();
 
+// Iniciar la aplicación
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
