@@ -1,6 +1,7 @@
 using Biblioteca.Api.Data;
 using Biblioteca.Api.ExternalClients;
 using Biblioteca.Api.Services;
+using Biblioteca.Api.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,8 +23,14 @@ builder.Services.AddHttpClient();
 // Registrar cliente de OpenLibrary
 builder.Services.AddScoped<OpenLibraryClient>();
 
-// Registrar servicio de libros externos
+// Registrar servicio de búsqueda de libros
 builder.Services.AddScoped<BookExternalService>();
+
+// Registrar repositorio de favoritos
+builder.Services.AddScoped<FavoriteRepository>();
+
+// ✅ Registrar servicio de favoritos (ESTA ES LA LÍNEA QUE FALTABA)
+builder.Services.AddScoped<FavoritesService>();
 
 // Swagger / OpenAPI para documentar la API
 builder.Services.AddEndpointsApiExplorer();
