@@ -13,50 +13,66 @@ var builder = WebApplication.CreateBuilder(args);
 // Agregar soporte para controllers
 builder.Services.AddControllers();
 
+// Configurar CORS para permitir llamadas desde Angular
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
 // Registrar DbContext para SQL Server
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Registrar HttpClient para llamadas a APIs externas
+// Registrar HttpClient
 builder.Services.AddHttpClient();
 
-// Registrar cliente de OpenLibrary usando interfaz
+// =============================================
+// REGISTRO CORRECTO DE DEPENDENCIAS
+// =============================================
+
+// Cliente externo OpenLibrary (INTERFAZ → IMPLEMENTACIÓN)
 builder.Services.AddScoped<IOpenLibraryClient, OpenLibraryClient>();
 
-// Registrar servicio de búsqueda de libros
-builder.Services.AddScoped<BookExternalService>();
-
-// Registrar repositorio de favoritos usando interfaz
+// Repositorio de favoritos (INTERFAZ → IMPLEMENTACIÓN)
 builder.Services.AddScoped<IFavoriteRepository, FavoriteRepository>();
 
-// Registrar servicio de favoritos
+// Servicios
+builder.Services.AddScoped<BookExternalService>();
 builder.Services.AddScoped<FavoritesService>();
 
-// Swagger / OpenAPI para documentar la API
+// Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // =============================================
-// Configurar el pipeline de solicitudes HTTP
+// Configurar pipeline HTTP
 // =============================================
 
 if (app.Environment.IsDevelopment())
 {
-    // Habilitar Swagger en entorno de desarrollo
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Redireccionar automáticamente a HTTPS
+// Redirección HTTPS
 app.UseHttpsRedirection();
 
-// Habilitar autorización (aunque todavía no usemos autenticación)
+// Habilitar CORS
+app.UseCors("AllowAngular");
+
+// Autorización
 app.UseAuthorization();
 
-// Mapear los controllers
+// Mapear controllers
 app.MapControllers();
 
-// Iniciar la aplicación
+// Iniciar app
 app.Run();

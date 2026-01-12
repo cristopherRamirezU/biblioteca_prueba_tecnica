@@ -1,0 +1,12 @@
+<h2>Mis favoritos</h2>
+
+<div *ngFor="let fav of favorites">
+  <p>
+    <b>{{ fav.title }}</b> - {{ fav.authors }}
+  </p>
+  <button (click)="remove(fav.id)">Eliminar</button>
+</div>
+
+<hr>
+
+<a routerLink="/">Volver a buscar</a>

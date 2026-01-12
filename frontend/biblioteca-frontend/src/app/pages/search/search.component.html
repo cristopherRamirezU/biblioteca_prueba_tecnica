@@ -1,0 +1,51 @@
+<h1>📚 Biblioteca</h1>
+<p>Libros cargados: {{ books.length }}</p>
+<p *ngIf="loading">🔄 Buscando...</p>
+
+
+
+<input [(ngModel)]="query" placeholder="Buscar libro..." />
+
+<button (click)="search()" [disabled]="loading">
+  {{ loading ? 'Buscando...' : 'Buscar' }}
+</button>
+
+<button (click)="loadFavorites()">⭐ Ver favoritos</button>
+
+<hr />
+
+<!-- RESULTADOS DE BÚSQUEDA -->
+<div *ngIf="!showFavorites">
+  <h2>Resultados</h2>
+
+  <div *ngFor="let book of books" style="border:1px solid #ccc; padding:10px; margin:10px;">
+    <h3>{{ book.title }}</h3>
+    <p>{{ book.authors }}</p>
+    <p>Año: {{ book.firstPublishYear }}</p>
+
+    <img *ngIf="book.coverUrl" [src]="book.coverUrl" width="80" />
+
+    <br /><br />
+
+    <button (click)="addToFavorites(book)">❤️ Agregar a favoritos</button>
+  </div>
+</div>
+
+<!-- FAVORITOS -->
+<div *ngIf="showFavorites">
+  <h2>⭐ Mis favoritos</h2>
+
+  <button (click)="showFavorites = false">⬅ Volver a buscar</button>
+
+  <div *ngFor="let fav of favorites" style="border:1px solid #ccc; padding:10px; margin:10px;">
+    <h3>{{ fav.title }}</h3>
+    <p>{{ fav.authors }}</p>
+    <p>Año: {{ fav.firstPublishYear }}</p>
+
+    <img *ngIf="fav.coverUrl" [src]="fav.coverUrl" width="80" />
+
+    <br /><br />
+
+    <button (click)="deleteFavorite(fav.id)">🗑️ Eliminar</button>
+  </div>
+</div>
